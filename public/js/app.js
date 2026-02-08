@@ -22,6 +22,62 @@ const dict = {
   }
 };
 
+const fallbackContent = {
+  settings: {
+    hero_title_ar: 'حلول تسويق وإعلان حديثة تنمّي العلامات التجارية',
+    hero_title_en: 'Modern Marketing & Advertising That Scales Brands',
+    hero_title_tr: 'Markaları Büyüten Modern Pazarlama ve Reklam Çözümleri',
+    hero_subtitle_ar: 'نبني محركات نمو وهوية بصرية قوية وتجارب رقمية عالية التحويل.',
+    hero_subtitle_en: 'We build growth engines, premium branding, and high-converting digital experiences.',
+    hero_subtitle_tr: 'Büyüme motorları, güçlü marka kimliği ve yüksek dönüşüm sağlayan dijital deneyimler inşa ediyoruz.'
+  },
+  services: [
+    {
+      id: 'branding',
+      icon: '🎯',
+      title: { ar: 'الهوية والعلامة التجارية', en: 'Brand Strategy', tr: 'Marka Stratejisi' },
+      desc: {
+        ar: 'تصميم هوية كاملة متناسقة مع شخصية المشروع والسوق المستهدف.',
+        en: 'Complete identity systems aligned with your business direction.',
+        tr: 'Marka kimliğini hedef kitleye göre yapılandırırız.'
+      }
+    },
+    {
+      id: 'ads',
+      icon: '📈',
+      title: { ar: 'إعلانات الأداء', en: 'Performance Ads', tr: 'Performans Reklamları' },
+      desc: {
+        ar: 'حملات مدفوعة تعتمد على الأرقام والتحسين المستمر.',
+        en: 'Data-driven paid campaigns optimized for ROI.',
+        tr: 'ROI odaklı, veriyle optimize edilen reklam kampanyaları.'
+      }
+    },
+    {
+      id: 'web',
+      icon: '💻',
+      title: { ar: 'تصميم وبرمجة المواقع', en: 'Web Design & Development', tr: 'Web Tasarım ve Geliştirme' },
+      desc: {
+        ar: 'مواقع سريعة وحديثة متعددة اللغات ومتوافقة مع جميع الأجهزة.',
+        en: 'Modern multilingual websites optimized for all devices.',
+        tr: 'Tüm cihazlarda hızlı çalışan çok dilli modern web siteleri.'
+      }
+    }
+  ],
+  projects: [
+    { title: 'Portfolio Case 1', category: 'Branding', source: 'Main Portfolio', description: 'Demo case study for static preview.', image_url: 'https://picsum.photos/seed/projA/800/500' },
+    { title: 'Portfolio Case 2', category: 'Performance', source: 'PR Portfolio', description: 'Demo case study for static preview.', image_url: 'https://picsum.photos/seed/projB/800/500' }
+  ],
+  team: [
+    { name: 'Omar Khaled', role: 'CEO & Strategy Lead', bio: 'Demo profile. Editable from dashboard.', image_url: 'https://picsum.photos/seed/teamx/400/400' },
+    { name: 'Lina Yildiz', role: 'Operations Manager', bio: 'Demo profile. Editable from dashboard.', image_url: 'https://picsum.photos/seed/teamy/400/400' }
+  ],
+  posts: [
+    { language: 'ar', title: 'دليل النمو الاستراتيجي في 2026', summary: 'خطة عملية لرفع التحويلات وبناء هوية قوية.' },
+    { language: 'en', title: 'Future of Performance Marketing in 2026', summary: 'How agencies scale leads while keeping CAC healthy.' },
+    { language: 'tr', title: '2026 Marka ve Büyüme Rehberi', summary: 'Ajanslar için sürdürülebilir dönüşüm stratejileri.' }
+  ]
+};
+
 let content;
 let currentLang = localStorage.getItem('lang') || 'ar';
 
@@ -68,6 +124,14 @@ function renderPosts() {
 }
 
 async function init() {
+  try {
+    const res = await fetch('/api/public/content');
+    if (!res.ok) throw new Error('Public API not available');
+    content = await res.json();
+  } catch (_e) {
+    content = fallbackContent;
+  }
+
   const res = await fetch('/api/public/content');
   content = await res.json();
   document.getElementById('langSwitcher').value = currentLang;
@@ -91,6 +155,19 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('leadForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.target).entries());
+
+    try {
+      const res = await fetch('/api/public/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      document.getElementById('leadResult').textContent = result.success ? '✅ Sent successfully' : `❌ ${result.error}`;
+      if (result.success) e.target.reset();
+    } catch (_e) {
+      document.getElementById('leadResult').textContent = '⚠️ Live API is unavailable in static preview mode.';
+    }
     const res = await fetch('/api/public/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

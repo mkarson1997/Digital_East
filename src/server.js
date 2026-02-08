@@ -246,6 +246,12 @@ app.post('/api/admin/login', (req, res) => {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
   const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '10h' });
+  res.cookie('auth_token', token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 10 * 60 * 60 * 1000
+  });
   res.cookie('auth_token', token, { httpOnly: true, sameSite: 'lax', secure: false, maxAge: 10 * 60 * 60 * 1000 });
   return res.json({ success: true });
 });
@@ -341,6 +347,7 @@ app.get('/admin', (_req, res) => {
 });
 
 app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'index.html'));
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
