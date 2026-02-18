@@ -330,9 +330,9 @@ textarea{min-height:150px; resize:vertical}
   .footer-kv:last-child{ border-bottom:0; }
 
   .footer-kv span:last-child{
-    max-width:58%;
+    max-width:72%;
     text-align:left;
-    word-break:break-word;
+    word-break:break-all;
     overflow-wrap:anywhere;
   }
 
