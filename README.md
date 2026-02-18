@@ -1,2 +1,0 @@
-# Digital East Web Platform
-
