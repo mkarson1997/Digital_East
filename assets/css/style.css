@@ -1009,7 +1009,9 @@ textarea{min-height:150px; resize:vertical}
   flex-wrap: wrap;
 }
 
-/* ── Hero Main – تصحيح الترتيب والـ grid ── */
+
+
+/* ── Hero Main – تصحيح الترتيب والـ grid نهائيًا ── */
 .hero-main {
   position: relative;
   padding: 140px 0 100px;
@@ -1019,13 +1021,16 @@ textarea{min-height:150px; resize:vertical}
   overflow: hidden;
 }
 
+
 .hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;   /* النص أكبر شوية */
-  gap: 60px;
-  align-items: center;
-  direction: rtl;                       /* مهم جدًا هنا عشان الـ RTL يشتغل صح */
-  unicode-bidi: plaintext;
+  display: grid !important;
+  grid-template-columns: 1.2fr 0.8fr !important; /* النص أكبر شوية */
+  gap: 60px !important;
+  align-items: center !important;
+  direction: rtl !important; /* مهم جدًا للترتيب الصحيح */
+  unicode-bidi: plaintext !important;
+  max-width: 1400px;
+  margin: 0 auto;
   position: relative;
   z-index: 2;
 }
@@ -1055,41 +1060,66 @@ textarea{min-height:150px; resize:vertical}
   font-weight: bold;
   font-size: 1rem;
   white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(255,90,47,0.4);
 }
 
-/* للموبايل: يصير عمود واحد */
+/* للموبايل: عمود واحد + ترتيب صحيح */
 @media (max-width: 980px) {
   .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    text-align: center;
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+    text-align: center !important;
   }
 
   .hero-text {
-    max-width: 100%;
+    max-width: 100% !important;
   }
 
   .hero-actions {
-    flex-direction: column;
-    gap: 16px;
+    flex-direction: column !important;
+    gap: 16px !important;
   }
 
   .hero-img {
-    max-height: 400px;
+    max-height: 400px !important;
   }
 
   .hero-badge {
-    position: static;
-    margin: 20px auto 0;
-    transform: none;
+    position: static !important;
+    margin: 20px auto 0 !important;
+    transform: none !important;
+  }
+
+  .kpis {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
   }
 }
 
-.kpis {
-  display: flex;
-  gap: 32px;
-  margin-top: 48px;
+
+.hero-img {
+  width: 100%;
+  max-height: 620px;
+  object-fit: contain;
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.1);
 }
+
+.hero-badge {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #000;
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
 
 .kpi {
   text-align: center;
